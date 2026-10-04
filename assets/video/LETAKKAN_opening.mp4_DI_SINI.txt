@@ -1,0 +1,5 @@
+Taruh video pembuka di folder ini dengan nama persis: opening.mp4
+Video ini dipakai otomatis bila YouTube tidak bisa dimuat (tanpa internet).
+
+Saran kompres agar ringan (butuh ffmpeg), hasil biasanya jauh lebih kecil dari file asli:
+ffmpeg -i video_asli.mp4 -vf "scale=-2:720" -c:v libx264 -crf 26 -preset slow -c:a aac -b:a 128k -movflags +faststart opening.mp4
