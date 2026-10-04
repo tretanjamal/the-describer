@@ -758,7 +758,7 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
           <p id="introSub">Tonton videonya sampai selesai untuk lanjut memilih avatar</p>
         </div>
       </div>
-      <div id="introVideoBox" class="v43-video"><div id="introHost"></div></div>
+      <div id="introVideoBox" class="v43-video"></div>
       <p id="introNote" style="display:none;margin:10px 0 0;font:700 12px 'Plus Jakarta Sans',sans-serif;color:#b91c1c"></p>
       <div class="v43-actions" style="justify-content:flex-end">
         <div style="display:flex;gap:10px">
@@ -3273,7 +3273,6 @@ body{display:block!important;position:fixed;inset:0;min-height:0!important;overf
 .v43-x{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid #d97706;background:#fde68a;color:#451a03;font-size:15px;cursor:pointer}
 .v43-x:hover{background:#fcd34d}
 .v43-video{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden;border:3px solid #78350f}
-.v43-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .v43-actions{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap}
 .v43-link{font:700 13px 'Plus Jakarta Sans',sans-serif;color:#0369a1;text-decoration:underline}
 .v43-b{padding:10px 20px;font:700 15px Fredoka,sans-serif;color:#1c1917;cursor:pointer;border-radius:18px}
@@ -3306,88 +3305,40 @@ body{display:block!important;position:fixed;inset:0;min-height:0!important;overf
 #modalWin.v9-perfect>div{margin-top:0!important}
 </style>
 <script id="v43-js">
-/* v48: video pembuka WAJIB ditonton sampai selesai sebelum pilih avatar (diputar otomatis setelah klik MULAI PETUALANGAN).
-   Sumber video: 1) YouTube (online)  2) file lokal assets/video/opening.mp4 (cadangan, bisa offline).
-   Tanpa tombol lewati, tidak bisa digeser maju. */
+/* v49: video pembuka diputar otomatis setelah klik MULAI PETUALANGAN dan WAJIB selesai sebelum pilih avatar.
+   Sumber: file lokal assets/video/opening.mp4. Tanpa tombol lewati, tidak bisa digeser maju. */
 (function(){
  /* ====== PENGATURAN ====== */
- const INTRO_VIDEO_URL='https://youtu.be/sjIwf3Qz4hQ';      // video utama (online)
- const LOCAL_VIDEO_SRC='assets/video/opening.mp4';          // video cadangan (offline) - taruh file mp4 di sini
- const ALLOW_CONTINUE_IF_NO_VIDEO=false; // true = bila YouTube DAN file lokal sama-sama gagal, pemain boleh lanjut tanpa video
+ const VIDEO_SRC='assets/video/opening.mp4'; // ganti nama/lokasi file video di sini
+ const ALLOW_CONTINUE_IF_NO_VIDEO=false;     // true = bila file video gagal dimuat, pemain boleh lanjut tanpa video
  /* ======================== */
  const $=id=>document.getElementById(id);
- const ytId=u=>{const m=String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{11})/);return m?m[1]:(/^[\w-]{11}$/.test(u)?u:null)};
- let resumeBgm=false,player=null,gateOn=false,gateCb=null,ended=false,failed=false,ytLoad=null,guard=null,maxT=0,ytTimer=null,runId=0;
+ let resumeBgm=false,gateOn=false,gateCb=null,ended=false,failed=false,runId=0;
  function pauseBgm(){try{resumeBgm=!bgmAudio.paused;if(resumeBgm)bgmAudio.pause()}catch(e){resumeBgm=false}}
  function restoreBgm(){try{if(resumeBgm&&!isAudioMuted)bgmAudio.play().catch(()=>{})}catch(e){}resumeBgm=false}
- function loadYT(){
-  if(ytLoad)return ytLoad;
-  ytLoad=new Promise((res,rej)=>{
-   if(window.YT&&YT.Player){res();return}
-   const prev=window.onYouTubeIframeAPIReady;
-   window.onYouTubeIframeAPIReady=()=>{try{prev&&prev()}catch(e){}res()};
-   const sc=document.createElement('script');sc.src='https://www.youtube.com/iframe_api';sc.onerror=()=>rej(new Error('yt'));
-   document.head.appendChild(sc);
-   setTimeout(()=>rej(new Error('timeout')),8000);
-  });
-  ytLoad.catch(()=>{ytLoad=null});
-  return ytLoad;
- }
  function ui(){
   const nx=$('introNext'),rt=$('introRetry'),n=$('introNote');
   nx.disabled=!ended;nx.style.opacity=ended?'1':'.55';nx.style.cursor=ended?'pointer':'not-allowed';
   nx.innerHTML=ended?'Lanjut Pilih Avatar <i class="fa-solid fa-arrow-right" style="font-size:11px"></i>':'<i class="fa-solid fa-lock" style="font-size:11px"></i> Tonton sampai selesai';
   rt.style.display=failed?'':'none';
   n.style.display=failed?'block':'none';
-  if(failed)n.textContent='Video belum bisa dimuat. Periksa koneksi internet, lalu tekan "Muat Ulang Video".';
+  if(failed)n.textContent='Video belum bisa dimuat. Tekan "Muat Ulang Video" untuk mencoba lagi.';
  }
- function stopGuard(){if(guard){clearInterval(guard);guard=null}}
- function cleanup(){
-  stopGuard();clearTimeout(ytTimer);ytTimer=null;
-  try{player&&player.destroy()}catch(e){}player=null;
-  $('introVideoBox').innerHTML='<div id="introHost"></div>';
- }
- function finish(){stopGuard();clearTimeout(ytTimer);ended=true;failed=false;ui()}
- function failFinal(){stopGuard();clearTimeout(ytTimer);failed=true;ended=!!ALLOW_CONTINUE_IF_NO_VIDEO;ui()}
- /* ---------- cadangan: video lokal ---------- */
- function startLocal(id){
-  if(id!==runId||!gateOn)return;
-  cleanup();
+ function finish(){ended=true;failed=false;ui()}
+ function fail(){failed=true;ended=!!ALLOW_CONTINUE_IF_NO_VIDEO;ui()}
+ function cleanup(){const v=$('introLocal');if(v){try{v.pause();v.removeAttribute('src');v.load()}catch(e){}}$('introVideoBox').innerHTML=''}
+ function start(){
+  const id=++runId;ended=false;failed=false;ui();cleanup();
   $('introVideoBox').innerHTML='<video id="introLocal" playsinline preload="auto" disablePictureInPicture controlsList="nodownload noplaybackrate" style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>';
   const v=$('introLocal');let mx=0;
   v.addEventListener('timeupdate',()=>{if(!v.seeking&&v.currentTime>mx)mx=v.currentTime});
   v.addEventListener('seeking',()=>{if(v.currentTime>mx+1)v.currentTime=mx}); /* tidak bisa digeser maju */
   v.addEventListener('ratechange',()=>{if(v.playbackRate!==1)v.playbackRate=1});
   v.addEventListener('ended',()=>{if(gateOn&&id===runId)finish()});
-  v.addEventListener('error',()=>{if(id===runId)failFinal()});
+  v.addEventListener('error',()=>{if(id===runId)fail()});
   v.addEventListener('click',()=>{v.paused?v.play().catch(()=>{}):v.pause()}); /* ketuk untuk putar/jeda */
-  v.src=LOCAL_VIDEO_SRC;
+  v.src=VIDEO_SRC;
   const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});
- }
- /* ---------- utama: YouTube ---------- */
- function startYT(id,vid){
-  if(!vid||navigator.onLine===false){startLocal(id);return}
-  loadYT().then(()=>{
-   if(id!==runId||!gateOn)return;
-   ytTimer=setTimeout(()=>startLocal(id),10000); /* tidak siap dalam 10 detik -> pakai video lokal */
-   player=new YT.Player('introHost',{host:'https://www.youtube-nocookie.com',videoId:vid,
-    playerVars:{autoplay:1,controls:0,disablekb:1,rel:0,modestbranding:1,playsinline:1,iv_load_policy:3},
-    events:{
-     onReady:e=>{clearTimeout(ytTimer);try{e.target.playVideo()}catch(_){}
-      stopGuard();maxT=0;
-      guard=setInterval(()=>{try{ /* cegah menggeser video ke depan */
-       if(!player||!player.getCurrentTime||ended)return;
-       const t=player.getCurrentTime();
-       if(t>maxT+2){player.seekTo(maxT,true)}else if(t>maxT){maxT=t}
-      }catch(e){}},400)},
-     onStateChange:e=>{if(e.data===0&&gateOn&&id===runId)finish()},
-     onError:()=>startLocal(id)}});
-  }).catch(()=>startLocal(id));
- }
- function start(){
-  const id=++runId;
-  ended=false;failed=false;ui();cleanup();
-  startYT(id,ytId(INTRO_VIDEO_URL));
  }
  window.openIntroGate=function(cb){
   if(gateOn)return;gateOn=true;gateCb=cb;
