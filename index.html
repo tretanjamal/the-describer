@@ -174,6 +174,7 @@ body{min-height:0!important;height:100vh;background:radial-gradient(circle at ce
 #clueText{font-size:17px!important;line-height:1.65!important;font-style:normal!important}
 #kakaRobiAdvice{font-size:14px!important;line-height:1.4!important}
 #kakaRobiHomeImg{width:20rem!important;height:20rem!important}
+#screenHome>div.anim-mascot{position:relative;top:34px}
 #screenProlog img,#screenLevelBriefing img{width:15rem!important;height:15rem!important}
 .kw{background:linear-gradient(transparent 55%,#fde047 55%);font-weight:800;color:#451a03}
 #vocabBox{margin-top:10px;display:grid;gap:5px}
@@ -244,10 +245,26 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
 @keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
 .spark{position:fixed;left:50%;top:45%;z-index:95;pointer-events:none;animation:spark 1.1s ease-out forwards}
 @keyframes spark{to{transform:translate(var(--dx),var(--dy)) rotate(360deg) scale(.2);opacity:0}}
+
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:radial-gradient(ellipse at center,#14213d 0%,#070b17 60%,#02040a 100%);transition:opacity .6s ease,visibility .6s;cursor:pointer}
+#splash.out{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo{width:min(46vw,320px);max-height:55vh;object-fit:contain;filter:drop-shadow(0 0 28px rgba(251,191,36,.45));animation:splashIn 1s ease-out both}
+.splash-bar{width:min(40vw,200px);height:5px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden}
+.splash-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fbbf24,#f59e0b);border-radius:9px;animation:splashBar 2.2s ease-out forwards}
+@keyframes splashIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes splashBar{to{width:100%}}
+#homeAudioBtn{position:absolute;top:10px;right:14px;z-index:30;width:36px;height:36px;border-radius:12px;background:rgba(15,23,42,.85);border:2px solid #475569;color:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:13px}
+#homeAudioBtn:hover{background:#1e293b}
 </style>
 
 </head>
 <body class="flex items-center justify-center min-h-screen">
+
+  <!-- SPLASH: logo di tengah layar gelap -->
+  <div id="splash" aria-hidden="true">
+    <img src="assets/images/logo_the_describer.webp" alt="" class="splash-logo">
+    <div class="splash-bar"><i></i></div>
+  </div>
 
   <!-- V8 GAME-FEEL CINEMATIC LAYER -->
   <div id="gameTransition" aria-hidden="true">
@@ -269,7 +286,7 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
         <img src="assets/images/logo_the_describer.webp" alt="Logo" class="w-10 h-10 object-contain drop-shadow group-hover:scale-110 transition-transform">
         <div>
           <h1 class="font-game text-base md:text-lg font-black text-amber-400 tracking-wider leading-none drop-shadow">THE DESCRIBER</h1>
-          <p class="text-[10px] font-bold text-sky-400 tracking-wide mt-0.5">DESA ROBATAL • 7 KEBIASAAN ANAK HEBAT</p>
+          <p class="text-[10px] font-bold text-sky-400 tracking-wide mt-0.5">DESCRIBE IT • SPOT IT • SOLVE IT!</p>
         </div>
       </div>
 
@@ -298,6 +315,7 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
 
     <!-- ================= 1. SCREEN: BERANDA (MAIN MENU) ================= -->
     <section id="screenHome" class="flex-1 flex items-center justify-between px-10 py-4 relative z-10">
+      <button id="homeAudioBtn" type="button" aria-label="Musik" onclick="homeToggleMusic()"><i class="fa-solid fa-volume-high"></i></button>
       <!-- Sisi Kiri: Panggung Maskot Kaka Robi -->
       <div class="w-5/12 flex flex-col items-center text-center relative anim-mascot">
         <!-- Speech Bubble -->
@@ -547,7 +565,7 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
           <i class="fa-solid fa-circle-info text-2xl text-sky-600"></i>
           <div>
             <h4 id="infoTitle" class="font-game text-xl font-black leading-none">INFORMASI</h4>
-            <p class="text-[10px] font-bold text-amber-800">Tujuan, cara bermain, dan tips bermain The Describer</p>
+            <p class="text-[10px] font-bold text-amber-800">CP, tujuan pembelajaran, cara bermain, dan tips The Describer</p>
           </div>
         </div>
         <button onclick="playUISound('click'); closeRulesModal()" class="w-8 h-8 bg-amber-200 hover:bg-amber-300 border-2 border-amber-600 rounded-full font-game font-black text-amber-950 text-xs transition" aria-label="Tutup">✕</button>
@@ -555,13 +573,20 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
 
       <div class="v44-scroll custom-scrollbar">
         <div class="v44-box">
+          <div class="v44-h"><i class="fa-solid fa-book-open-reader" style="color:#0369a1"></i> Capaian Pembelajaran (CP)</div>
+          <div class="v44-lv"><b>Mapel</b><span>Bahasa Inggris</span></div>
+          <div class="v44-lv"><b>Fase</b><span>D (SMP/MTs)</span></div>
+          <div class="v44-lv"><b>Materi</b><span>Teks deskriptif: ciri fisik, pakaian, dan barang bawaan orang</span></div>
+          <div class="v44-t" style="margin:6px 0 2px"><b>Pada akhir Fase D, peserta didik mampu:</b></div>
+          <div class="v44-lv"><b style="width:128px">Menyimak–Berbicara</b><span>Memahami gagasan utama dan informasi rinci dari teks lisan tentang topik sehari-hari, serta mengungkapkan gagasan dan pengalaman dengan kalimat sederhana dan majemuk.</span></div>
+          <div class="v44-lv"><b style="width:128px">Membaca–Memirsa</b><span>Memahami informasi tersurat dan tersirat dari berbagai teks tulis atau multimodal, lalu merespons sesuai konteks.</span></div>
+          <div class="v44-lv"><b style="width:128px">Menulis–Mempresentasikan</b><span>Mengomunikasikan gagasan dan pengalaman secara tulis atau multimodal dengan kalimat sederhana dan majemuk, struktur teks, serta unsur kebahasaan yang tepat.</span></div>
+          <div class="v44-t" style="margin-top:4px;font-size:11px;color:#a16207">Sumber: Panduan Mata Pelajaran Bahasa Inggris Fase B–Fase F Tingkat Lanjut, BSKAP Kemendikdasmen (2025).</div>
+        </div>
+
+        <div class="v44-box">
           <div class="v44-h"><i class="fa-solid fa-bullseye" style="color:#d97706"></i> Tujuan Pembelajaran</div>
-          <div class="v44-t">Setelah bermain, peserta didik mampu:</div>
-          <ul class="v44-ul">
-            <li>mengenali kosakata ciri fisik, pakaian, dan barang bawaan dalam bahasa Inggris;</li>
-            <li>menyusun kalimat deskripsi orang dengan <i>has/have</i>, <i>is/are</i>, <i>wears</i>, dan <i>carries</i> serta urutan kata sifat yang tepat;</li>
-            <li>membaca laporan saksi (teks deskripsi) dan mencocokkannya dengan gambar orang yang dimaksud.</li>
-          </ul>
+          <div class="v44-t">Setelah bermain, peserta didik mampu menganalisis dan menyusun deskripsi orang dalam bahasa Inggris (ciri fisik, pakaian, dan barang bawaan) berdasarkan laporan saksi yang dibaca maupun didengar.</div>
           <div class="v44-t" style="margin-top:6px"><b>Misi cerita:</b> pulihkan 7 Pahlawan Duta Kebiasaan Hebat dari Kabut Si Malas dengan menganalisis laporan saksi berbahasa Inggris.</div>
         </div>
 
@@ -783,13 +808,12 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
       <div class="v43-dev">
         <div class="v43-profile">
           <div class="v45-photo" id="devPhotoWrap">
-            <img id="devPhoto" src="https://ik.imagekit.io/33c8o2seg5/me_new_red_0DTTNN1_2.png?updatedAt=1769393849005" alt="Foto Jamaluddin, S.Pd.I., M.Pd." loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('nophoto');this.remove()">
+            <img id="devPhoto" src="assets/images/foto_pengembang.webp" alt="Foto Jamaluddin, S.Pd.I., M.Pd." loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('nophoto');this.remove()">
             <span class="v45-initial" aria-hidden="true">J</span>
           </div>
           <div class="v43-name" style="font-size:19px;line-height:1.2">Jamaluddin, S.Pd.I., M.Pd.</div>
           <div class="v43-role">Guru Bahasa Inggris</div>
           <div class="v43-school"><i class="fa-solid fa-school"></i> UPTD SMPN 2 Robatal</div>
-          <a class="v43-contact v43-mail" href="mailto:jamaluddin551@guru.smp.belajar.id"><i class="fa-solid fa-envelope"></i> Kirim Surel</a>
         </div>
 
         <div class="v43-info">
@@ -840,6 +864,7 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
             <li><i class="fa-solid fa-image"></i> Seluruh gambar, ilustrasi, dan karakter dibuat dengan ChatGPT.</li>
             <li><i class="fa-solid fa-music"></i> Backsound dibuat dengan Suno.</li>
             <li><i class="fa-solid fa-volume-high"></i> Sound effect dibuat dengan ElevenLabs.</li>
+            <li><i class="fa-solid fa-microphone-lines"></i> Suara narasi (petunjuk saksi/clue, kosakata/vocab, dan pemandu/guide) dibuat dengan Microsoft Edge TTS (edge-tts).</li>
             <li><i class="fa-solid fa-film"></i> Video dibuat dengan Google Flow.</li>
             <li><i class="fa-solid fa-pen-ruler"></i> Seluruh materi dan soal disusun oleh pengembang.</li>
           </ul>
@@ -1016,6 +1041,7 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
 
     function playBGM(trackName) {
       if (isAudioMuted) return;
+      if (!bgmAudio.paused && bgmAudio.src.endsWith(trackName)) return;
       bgmAudio.src = `assets/audio/${trackName}`;
       bgmAudio.volume = 0.35;
       bgmAudio.play().catch(() => {});
@@ -3393,5 +3419,110 @@ body{display:block!important;position:fixed;inset:0;min-height:0!important;overf
 .v45-photo.nophoto .v45-initial{display:block;color:#fff;font:800 62px Fredoka,sans-serif}
 .v45-bib{margin:4px 0 0;padding-left:28px;text-indent:-28px;text-align:left;font:600 13px/1.6 'Plus Jakarta Sans',sans-serif;color:#451a03;word-break:break-word}
 </style>
+<script id="v51-audio">
+/* v51 (sejak v50): pemasangan audio baru (tambahan murni, tidak mengubah kode lama) */
+(function(){
+  const A='assets/audio/';
+  const muted=()=>typeof isAudioMuted!=='undefined'&&isAudioMuted;
+  let cur=null;
+  function playFile(name,vol,fallback){
+    if(muted()){return}
+    try{
+      const a=new Audio(A+name);a.volume=vol;
+      a.onerror=()=>{if(fallback)fallback()};
+      a.play().catch(()=>{if(fallback)fallback()});
+      return a;
+    }catch(e){if(fallback)fallback()}
+  }
+  function say(text,rate){
+    if(muted()||!('speechSynthesis' in window))return;
+    speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=rate||0.85;speechSynthesis.speak(u);
+  }
+  function stopVoice(){if(cur){try{cur.pause()}catch(e){}cur=null}if('speechSynthesis' in window)speechSynthesis.cancel()}
+
+  /* 1. Musik: peta -> bgm_map, bos -> bgm_boss, ending -> bgm_ending */
+  const _pb=playBGM;
+  playBGM=function(t){
+    const map=document.getElementById('screenMap');
+    if(t==='bgm_main_theme.mp3'&&map&&!map.classList.contains('hidden'))t='bgm_map.mp3';
+    _pb(t);
+  };
+  const _slb=showLevelBriefing;
+  showLevelBriefing=function(i){_slb(i);if(CASES_DATA[i]&&CASES_DATA[i].boss)playBGM('bgm_boss.mp3')};
+  const _ff=finishFullGame;
+  finishFullGame=function(){_ff.apply(this,arguments);playBGM('bgm_ending.mp3')};
+
+  /* 2. Suara petunjuk saksi: klik 1x = normal, klik lagi (<8 dtk) = pelan */
+  let lastClue=0;
+  speakClue=function(){
+    const c=CASES_DATA[playerState.currentCaseIndex];stopVoice();
+    const now=Date.now(),slow=(now-lastClue)<8000;lastClue=slow?0:now;
+    const n=c.boss?8:c.id;
+    if(n>=1&&n<=8)cur=playFile(`voice_clue_L${n}_${slow?'slow':'normal'}.mp3`,1,()=>say(c.clue,slow?0.65:0.85));
+    else say(c.clue,slow?0.65:0.85);
+  };
+
+  /* 3. Klik kosakata -> ucapkan kata (voice_vocab_*.mp3, cadangan: suara browser) */
+  document.addEventListener('click',e=>{
+    const ch=e.target.closest&&e.target.closest('.vchip');if(!ch)return;
+    const en=(ch.querySelector('span')||ch).textContent.trim();
+    const slug=en.toLowerCase().replace(/^(a|an|the)\s+/,'').replace(/[^a-z0-9\- ]/g,'').trim().replace(/\s+/g,'_');
+    if(!slug||/\.\.\./.test(en))return;
+    stopVoice();cur=playFile(`voice_vocab_${slug}.mp3`,1,()=>say(en.replace(/\.\.\./g,''),0.8));
+  });
+  const st=document.createElement('style');st.textContent='.vchip{cursor:pointer}.vchip:active{transform:scale(.98)}';document.head.appendChild(st);
+
+  /* 4. Efek bos */
+  if(typeof bossHit==='function'){const _bh=bossHit;bossHit=function(){playFile('sfx_boss_hit.mp3',.7);return _bh.apply(this,arguments)}}
+  if(typeof bossWrong==='function'){const _bw=bossWrong;bossWrong=function(){playFile('sfx_boss_spell.mp3',.7);return _bw.apply(this,arguments)}}
+
+  /* 5. Suara pemandu saat modal menang / kalah / salah muncul (bahasa Indonesia) */
+  const guide={modalWin:'win',modalOver:'lose',modalWrong:'tryagain'};
+  Object.keys(guide).forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    new MutationObserver(()=>{
+      if(!el.classList.contains('hidden')){
+        const g=(id==='modalWin'&&CASES_DATA[playerState.currentCaseIndex]&&CASES_DATA[playerState.currentCaseIndex].boss)?'boss':guide[id];
+        setTimeout(()=>{stopVoice();
+          /* VOICE_GUIDE_LANG: 'en' = Inggris saja, 'id' = Indonesia saja, 'both' = Inggris lalu Indonesia */
+          const L=window.VOICE_GUIDE_LANG||'both';
+          if(L==='id'){cur=playFile(`voice_guide_${g}_id.mp3`,1);return}
+          const en=playFile(`voice_guide_${g}_en.mp3`,1);cur=en;
+          if(L==='both'&&en)en.addEventListener('ended',()=>{if(cur===en)cur=playFile(`voice_guide_${g}_id.mp3`,1)});
+        },id==='modalWin'?900:300);
+      }
+    }).observe(el,{attributes:true,attributeFilter:['class']});
+  });
+})();
+</script>
+<script id="v53-splash-js">
+(function(){
+  const sp=document.getElementById('splash'),SHOW=2300,MAX=4500;
+  let done=false,t0=Date.now();
+  const homeVisible=()=>{const h=document.getElementById('screenHome');return h&&!h.classList.contains('hidden')};
+  const startMusic=()=>{ if(!homeVisible()||isAudioMuted)return;
+    if(bgmAudio.paused){playBGM('bgm_main_theme.mp3');}
+    syncIcon();
+  };
+  function syncIcon(){const b=document.querySelector('#homeAudioBtn i');if(b)b.className='fa-solid '+(isAudioMuted?'fa-volume-xmark':'fa-volume-high')}
+  function armUnlock(){ /* bila autoplay diblokir browser, mulai musik pada interaksi pertama */
+    const un=()=>{ if(bgmAudio.paused&&homeVisible()&&!isAudioMuted)playBGM('bgm_main_theme.mp3');
+      if(!bgmAudio.paused){['pointerdown','keydown','touchstart'].forEach(e=>document.removeEventListener(e,un,true))} };
+    ['pointerdown','keydown','touchstart'].forEach(e=>document.addEventListener(e,un,true));
+  }
+  function finish(){ if(done)return;done=true;sp.classList.add('out');
+    setTimeout(()=>{startMusic();armUnlock()},150);
+    setTimeout(()=>sp.remove(),800);}
+  const wait=()=>setTimeout(finish,Math.max(0,SHOW-(Date.now()-t0)));
+  if(document.readyState==='complete')wait();else window.addEventListener('load',wait);
+  setTimeout(finish,MAX);
+  sp.addEventListener('click',()=>{ finish(); });
+  window.homeToggleMusic=function(){
+    toggleAudio();
+    if(!isAudioMuted&&bgmAudio.paused)playBGM('bgm_main_theme.mp3');
+    syncIcon();
+  };
+})();
+</script>
 </body>
 </html>
