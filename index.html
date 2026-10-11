@@ -636,7 +636,7 @@ section:not(.hidden){animation:screenIn .5s cubic-bezier(.2,.8,.2,1) both}
             <li>Kalau salah, baca pembahasan. Frasa kunci disorot supaya kamu bisa membandingkannya dengan pilihanmu.</li>
             <li>Di labirin level 7, gerakkan Intan dengan tombol panah atau W A S D.</li>
             <li>Di level bos, centang <b>Mode santai</b> bila ingin bermain tanpa batas waktu.</li>
-            <li>Tombol <b>Aa</b> di pojok kiri bawah mengatur teks besar dan kontras tinggi.</li>
+            <li>Tombol <b>Aa</b> di pojok kiri bawah mengaktifkan mode kontras tinggi.</li>
           </ul>
         </div>
       </div>
@@ -2615,7 +2615,7 @@ header{position:relative;z-index:45}
    oldSubmit(ok);playerState.score+=bonus;$('hudScore').textContent=playerState.score;if(stars===3){perfectMissions++;missionStreak++;}else{missionStreak=0};setReward(stars,bonus,stars===3);addNextStory();
  };
  const oldProceed=proceedFromVictory;
- proceedFromVictory=function(){const finished=playerState.clearedCaseIds.length===CASES_DATA.length;oldProceed();if(!finished){const next=playerState.clearedCaseIds.length;setTimeout(()=>showLevelBriefing(next),250)}};
+ proceedFromVictory=function(){const finished=playerState.clearedCaseIds.length===CASES_DATA.length;oldProceed();};
  const oldRender=renderMapNodes;
  renderMapNodes=function(){oldRender();const n=playerState.clearedCaseIds.length;const lab=$('mapProgressLabel');if(lab)lab.innerHTML=`<i class="fa-solid fa-route mr-1"></i>${n} / ${CASES_DATA.length} misi selesai`;document.querySelectorAll('#mapIslandsContainer>div').forEach((d,i)=>{const c=CASES_DATA[i];if(c){const badge=d.querySelector('.absolute');}})};
  // Normalize visible player language. Keep internal function names untouched.
@@ -2628,7 +2628,7 @@ header{position:relative;z-index:45}
 /* ===== Nama+Kelas -> Video Pembuka (wajib tuntas) -> Pilih Avatar -> Prolog ===== */
 (function(){
  const g=id=>document.getElementById(id),AK='the_describer_avatar';
- const AV=[['boy1','Raka','Si Mata Elang'],['boy2','Dimas','Pemburu Petunjuk'],['boy3','Bima','Penjaga Cerdas'],['girl1','Sari','Ratu Detail'],['girl2','Nadia','Penyelidik Cilik'],['girl3','Laras','Pemecah Teka-teki']];
+ const AV=[['boy1','Beni','Si Mata Elang'],['boy2','Fian','Pemburu Petunjuk'],['boy3','Abian','Penjaga Cerdas'],['girl1','Risa','Ratu Detail'],['girl2','Veli','Penyelidik Cilik'],['girl3','Adel','Pemecah Teka-teki']];
  let sel=null,ok=false;const sec=g('screenCharacterSelect');sec.classList.add('flex');
  g('characterSelectGrid').innerHTML=AV.map(([k,n,h])=>`<div class="char-select-card" data-k="${k}" onclick="pickAvatar('${k}')"><span class="checkmark"><i class="fa-solid fa-check"></i></span><div class="avatar-preview"><img src="assets/images/detective_${k}_idle.webp" alt="${n}"></div><div class="char-name font-game font-black text-xs text-center text-slate-900">${n}</div><div class="text-[9px] text-center font-bold text-amber-700">${h}</div></div>`).join('');
  g('hudStats').insertAdjacentHTML('afterbegin','<img id="hudAvatar" class="hidden" style="height:38px;width:38px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid #fbbf24;background:#fffbeb">');
@@ -2697,22 +2697,22 @@ header{position:relative;z-index:45}
 /* ===== Narasi baru: suara detektif (avatar), berhalaman, tidak dobel ===== */
 (function(){
  const $=id=>document.getElementById(id);
- const AVN={boy1:'Raka',boy2:'Dimas',boy3:'Bima',girl1:'Sari',girl2:'Nadia',girl3:'Laras'};
- const who=()=>AVN[playerState.avatar]||'Raka';
+ const AVN={boy1:'Beni',boy2:'Fian',boy3:'Abian',girl1:'Risa',girl2:'Veli',girl3:'Adel'};
+ const who=()=>AVN[playerState.avatar]||'Beni';
  const NAR=[
- {p:['Fajar seharusnya sudah menyingsing, tetapi Desa Robatal masih sunyi. Dari puncak Menara Fajar, kulihat kabut ungu menggantung rendah. Itulah Kabut Si Malas, yang mencuri kebiasaan baik warga.','Yang pertama dicuri adalah kebiasaan bangun pagi. Ayam jantan lupa berkokok, warga terus tertidur, dan Ayu, sang penjaga, ikut memudar. Tak seorang pun ingat seperti apa rupanya!','Pak Joko, penjaga menara, menyerahkan laporan saksinya padaku. Di Cermin Fajar, bayangan Ayu masih samar. Kubaca laporan itu, lalu kupilih deskripsi bahasa Inggris yang tepat untuk setiap bagian. Ayo, sebelum matahari terbit!'],
+ {p:['Fajar seharusnya sudah menyingsing, tetapi Desa Robatal masih sunyi. Dari puncak Menara Fajar, kulihat kabut ungu menggantung rendah. Itulah Kabut Si Malas, yang mencuri kebiasaan baik warga.','Yang pertama dicuri adalah kebiasaan bangun pagi. Ayam jantan lupa berkokok, warga terus tertidur, dan Ayu, sang penjaga, ikut memudar. Tak seorang pun ingat seperti apa rupanya!','Pak Zahrawi, penjaga menara, menyerahkan laporan saksinya padaku. Di Cermin Fajar, bayangan Ayu masih samar. Kubaca laporan itu, lalu kupilih deskripsi bahasa Inggris yang tepat untuk setiap bagian. Ayo, sebelum matahari terbit!'],
   w:'Cermin Fajar bersinar terang dan Ayu muncul utuh. Ia membuka jendela menara, lalu ayam jantan berkokok nyaring. Kabut Si Malas mundur dengan geram, dan dari gumpalannya jatuh serpihan topeng yang berkilau. Tertulis di baliknya: "Cahaya berikutnya ada di Masjid Cahaya Iman." Kusimpan serpihan pertama itu.'},
- {p:['Mengikuti petunjuk serpihan topeng, aku tiba di Masjid Cahaya Iman. Kabut Si Malas ternyata sudah lebih dulu sampai. Kubahnya suram, dan suara beduk tak lagi terdengar.','Kali ini yang dicuri adalah kebiasaan beribadah. Sultan, sang penjaga, kehilangan peci, baju koko, sarung, dan perlengkapan doanya. Tanpa semua itu, ia tak bisa menabuh beduk.','Bu Aminah, pengurus masjid, memberiku laporan saksi tentang Sultan. Di Studio Busana, aku akan merakit Sultan sesuai laporan itu. Hati-hati, ada pakaian pengecoh yang mirip tetapi warna atau bentuknya berbeda!'],
+ {p:['Mengikuti petunjuk serpihan topeng, aku tiba di Masjid Cahaya Iman. Kabut Si Malas ternyata sudah lebih dulu sampai. Kubahnya suram, dan suara beduk tak lagi terdengar.','Kali ini yang dicuri adalah kebiasaan beribadah. Sultan, sang penjaga, kehilangan peci, baju koko, sarung, dan perlengkapan doanya. Tanpa semua itu, ia tak bisa menabuh beduk.','Bu Fatim, pengurus masjid, memberiku laporan saksi tentang Sultan. Di Studio Busana, aku akan merakit Sultan sesuai laporan itu. Hati-hati, ada pakaian pengecoh yang mirip tetapi warna atau bentuknya berbeda!'],
   w:'Peci hitam, baju koko putih, dan sarung kotak hijau kembali melekat pada Sultan. Ia menabuh beduk dengan lantang, dan warga berduyun-duyun ke masjid. Kabut Si Malas terdorong mundur dan menjatuhkan serpihan topeng kedua, yang menunjuk ke Arena Angin Robatal.'},
- {p:['Serpihan kedua membawaku ke Arena Angin Robatal. Kabut Si Malas menyelimuti lapangan hijau yang biasanya ramai pelari, dan kini tak ada satu pun langkah kaki.','Kebiasaan berolahraga ikut dicuri. Galang, pelari tercepat sekolah, kehilangan wujudnya: tinggi dan bentuk tubuhnya kabur, bahkan handuk birunya lenyap.','Pak Budi, guru olahraga, sempat melihat Galang sebelum kabut datang dan menuliskannya dalam laporan. Di Laboratorium Postur, aku harus menyetel tinggi, bentuk tubuh, dan handuknya. Tak ada label yang membantu, hanya laporan itu!'],
+ {p:['Serpihan kedua membawaku ke Arena Angin Robatal. Kabut Si Malas menyelimuti lapangan hijau yang biasanya ramai pelari, dan kini tak ada satu pun langkah kaki.','Kebiasaan berolahraga ikut dicuri. Galang, pelari tercepat sekolah, kehilangan wujudnya: tinggi dan bentuk tubuhnya kabur, bahkan handuk birunya lenyap.','Pak Wahyudi, guru olahraga, sempat melihat Galang sebelum kabut datang dan menuliskannya dalam laporan. Di Laboratorium Postur, aku harus menyetel tinggi, bentuk tubuh, dan handuknya. Tak ada label yang membantu, hanya laporan itu!'],
   w:'Galang berdiri tegap dengan handuk biru di lehernya, lalu melesat mengelilingi lapangan. Tawa dan langkah pelari kembali memenuhi Arena Angin. Kabut Si Malas terbelah dan menjatuhkan serpihan topeng ketiga, yang menunjuk ke Pasar Pelangi.'},
- {p:['Serpihan ketiga mengarah ke Pasar Pelangi. Kabut Si Malas bersembunyi di antara lapak, dan pasar yang biasanya harum buah dan tempe kini redup.','Sasarannya kebiasaan makan sehat dan bergizi. Aisyah, sang penjaga, tersesat di keramaian, dan kabut membuat pasar begitu gelap sehingga hanya senter yang bisa menunjukkan jalan.','Bu Sari, penjual sayur, menuliskan apa yang ia lihat tentang Aisyah. Kuarahkan senterku ke setiap sudut pasar, mencari orang yang cocok dengan laporan itu. Perhatikan warna hijab, celemek, dan bekalnya!'],
+ {p:['Serpihan ketiga mengarah ke Pasar Pelangi. Kabut Si Malas bersembunyi di antara lapak, dan pasar yang biasanya harum buah dan tempe kini redup.','Sasarannya kebiasaan makan sehat dan bergizi. Aisyah, sang penjaga, tersesat di keramaian, dan kabut membuat pasar begitu gelap sehingga hanya senter yang bisa menunjukkan jalan.','Bu Maisunah, penjual sayur, menuliskan apa yang ia lihat tentang Aisyah. Kuarahkan senterku ke setiap sudut pasar, mencari orang yang cocok dengan laporan itu. Perhatikan warna hijab, celemek, dan bekalnya!'],
   w:'Cahaya senter jatuh tepat pada Aisyah. Ia tersenyum dan membuka kotak bekal hijau berisi buah segar dan tempe, dan warga mulai memilih makanan sehat. Kabut Si Malas mengerut dan menjatuhkan serpihan topeng keempat, yang menunjuk ke Pojok Ilmu.'},
- {p:['Serpihan keempat menuntunku ke Pojok Ilmu di balai desa. Kabut Si Malas mengacak-acak tempat ini: buku berserakan dan kartu-kartu petunjuk tercampur.','Yang dicuri kali ini kebiasaan gemar belajar. Iswandi, sang penjaga, menyimpan ciri-cirinya di balik kartu-kartu itu. Setiap tulisan bahasa Inggris punya pasangan gambarnya, tetapi semuanya tertutup rapat.','Bu Ratna, pustakawan desa, menyerahkan laporan saksi tentang Iswandi. Kini aku harus membalik dua kartu sekaligus dan memasangkan tulisan Inggris dengan gambarnya. Kosakata yang kupelajari pasti membantu!'],
+ {p:['Serpihan keempat menuntunku ke Pojok Ilmu di balai desa. Kabut Si Malas mengacak-acak tempat ini: buku berserakan dan kartu-kartu petunjuk tercampur.','Yang dicuri kali ini kebiasaan gemar belajar. Iswandi, sang penjaga, menyimpan ciri-cirinya di balik kartu-kartu itu. Setiap tulisan bahasa Inggris punya pasangan gambarnya, tetapi semuanya tertutup rapat.','Bu Nur, pustakawan desa, menyerahkan laporan saksi tentang Iswandi. Kini aku harus membalik dua kartu sekaligus dan memasangkan tulisan Inggris dengan gambarnya. Kosakata yang kupelajari pasti membantu!'],
   w:'Pasangan terakhir terbuka. Iswandi membetulkan kacamata bulatnya dan membuka ensiklopedia sains biru, dan warga berebut membaca. Kabut Si Malas makin menipis dan menjatuhkan serpihan topeng kelima, yang menunjuk ke Sungai Gotong Royong.'},
- {p:['Serpihan kelima membawaku ke Sungai Gotong Royong. Kabut Si Malas membuat warga merasa tak perlu saling membantu: aliran sungai tersumbat, dan semua menunggu orang lain bergerak.','Kebiasaan bermasyarakat pun dicuri. Alifa, sang penjaga, bisa mengajak semua orang bekerja bersama, tetapi ia berbaur di antara para relawan yang tampak serupa.','Pak Slamet, ketua RT, mencatat ciri-ciri Alifa dalam laporannya. Kuamati para relawan satu per satu, kucocokkan tinggi badan, pakaian kerja, dan peralatannya dengan laporan itu, lalu kupilih Alifa yang asli.'],
+ {p:['Serpihan kelima membawaku ke Sungai Gotong Royong. Kabut Si Malas membuat warga merasa tak perlu saling membantu: aliran sungai tersumbat, dan semua menunggu orang lain bergerak.','Kebiasaan bermasyarakat pun dicuri. Alifa, sang penjaga, bisa mengajak semua orang bekerja bersama, tetapi ia berbaur di antara para relawan yang tampak serupa.','Pak Nurhasan, ketua RT, mencatat ciri-ciri Alifa dalam laporannya. Kuamati para relawan satu per satu, kucocokkan tinggi badan, pakaian kerja, dan peralatannya dengan laporan itu, lalu kupilih Alifa yang asli.'],
   w:'Alifa melambaikan sarung tangan merahnya dan mengajak warga bergerak. Garu bambu, kantong sampah, dan tawa memenuhi tepi sungai, dan air kembali mengalir jernih. Kabut Si Malas terhuyung dan menjatuhkan serpihan topeng keenam, yang menunjuk ke Kampung Bintang.'},
- {p:['Serpihan keenam mengantarku ke Kampung Bintang saat malam turun. Kabut Si Malas menyelinap lewat layar gawai, dan warga masih terjaga padahal waktu tidur sudah lewat.','Kebiasaan tidur cepat adalah curian terakhirnya. Intan, sang penjaga, berusaha pulang ke kasurnya, tetapi gawai-gawai berbahaya menjebaknya, dan gerbang-gerbang mengajukan pertanyaan.','Bu Lestari, warga kampung, sempat melihat Intan sebelum lampu padam dan menulis laporannya. Aku akan memandu Intan melewati labirin: hindari gawai, jawab soal bahasa Inggris di kotak ?, dan capai kasur sebelum pukul sembilan.'],
+ {p:['Serpihan keenam mengantarku ke Kampung Bintang saat malam turun. Kabut Si Malas menyelinap lewat layar gawai, dan warga masih terjaga padahal waktu tidur sudah lewat.','Kebiasaan tidur cepat adalah curian terakhirnya. Intan, sang penjaga, berusaha pulang ke kasurnya, tetapi gawai-gawai berbahaya menjebaknya, dan gerbang-gerbang mengajukan pertanyaan.','Bu Rahma, warga kampung, sempat melihat Intan sebelum lampu padam dan menulis laporannya. Aku akan memandu Intan melewati labirin: hindari gawai, jawab soal bahasa Inggris di kotak ?, dan capai kasur sebelum pukul sembilan.'],
   w:'Intan merebahkan diri di kasur dengan piyama garis merah mudanya, dan layar-layar gawai padam satu per satu. Kabut Si Malas meraung dan menjatuhkan serpihan terakhir. Ketujuh serpihan menyatu menjadi topeng utuh bergambar wajah Ayu, dengan pesan: "Temui aku di Alun-Alun Pahlawan."'},
  {p:['Ketujuh kebiasaan sudah pulih, tetapi Kabut Si Malas belum menyerah. Di Alun-Alun Pahlawan, ia mengenakan topeng utuh dari tujuh serpihan itu dan menyamar menjadi Ayu, pahlawan pertama yang ia curi rupanya.','Ketujuh pahlawan meminjamkan kekuatan kebiasaan mereka kepadaku. Setiap mantra malas harus kutangkis dengan jawaban yang benar sebelum waktunya habis.','Aku punya 15 detik di setiap ronde. Setelah itu, aku harus membongkar penyamaran dan menemukan Ayu yang asli di antara para tersangka. Ini pertarungan terakhir!'],
   w:'Topeng itu retak, dan Kabut Si Malas terungkap! Ayu yang asli melangkah maju, lalu ketujuh pahlawan bersama-sama menyegel kabut itu untuk selamanya. Desa Robatal bebas, dan semua kebiasaan baik kembali menyala.'}];
@@ -2760,22 +2760,22 @@ header{position:relative;z-index:45}
 <script id="v15-js">
 (function(){
  const $=id=>document.getElementById(id);
- const AVN={boy1:'Raka',boy2:'Dimas',boy3:'Bima',girl1:'Sari',girl2:'Nadia',girl3:'Laras'};
- /* ===== layar depan: Raka, lalu diganti avatar pilihan ===== */
+ const AVN={boy1:'Beni',boy2:'Fian',boy3:'Abian',girl1:'Risa',girl2:'Veli',girl3:'Adel'};
+ /* ===== layar depan: Beni, lalu diganti avatar pilihan ===== */
  function setHome(k){k=k||'boy1';const im=$('kakaRobiHomeImg');if(im){im.src='assets/images/detective_'+k+'_idle.webp';im.alt=AVN[k]}
-  document.querySelectorAll('#screenHome span').forEach(s=>{if(/Berkata:/.test(s.textContent)&&!s.children.length)s.textContent=(AVN[k]||'Raka')+' Berkata:'})}
+  document.querySelectorAll('#screenHome span').forEach(s=>{if(/Berkata:/.test(s.textContent)&&!s.children.length)s.textContent=(AVN[k]||'Beni')+' Berkata:'})}
  setHome('boy1');
  const _c=window.confirmCharacterSelection;window.confirmCharacterSelection=function(){_c();setHome(playerState.avatar)};
  const _r=window.resumeSavedGame;if(_r)window.resumeSavedGame=function(){_r();setHome(playerState.avatar)};
  /* ===== laporan saksi berbentuk formulir ===== */
  const RPT=[
- ['Pak Joko, penjaga Menara Fajar','04.45 WIB','Menara Fajar','sangat tebal'],
- ['Bu Aminah, pengurus masjid','05.10 WIB','Masjid Cahaya Iman','tebal'],
- ['Pak Budi, guru olahraga','06.20 WIB','Arena Angin Robatal','tebal'],
- ['Bu Sari, penjual sayur','07.30 WIB','Pasar Pelangi','sedang'],
- ['Bu Ratna, pustakawan desa','10.00 WIB','Pojok Ilmu, Balai Desa','sedang'],
- ['Pak Slamet, ketua RT','15.30 WIB','Sungai Gotong Royong','menipis'],
- ['Bu Lestari, warga Kampung Bintang','20.45 WIB','Kampung Bintang','menipis'],
+ ['Pak Zahrawi, penjaga Menara Fajar','04.45 WIB','Menara Fajar','sangat tebal'],
+ ['Bu Fatim, pengurus masjid','05.10 WIB','Masjid Cahaya Iman','tebal'],
+ ['Pak Wahyudi, guru olahraga','06.20 WIB','Arena Angin Robatal','tebal'],
+ ['Bu Maisunah, penjual sayur','07.30 WIB','Pasar Pelangi','sedang'],
+ ['Bu Nur, pustakawan desa','10.00 WIB','Pojok Ilmu, Balai Desa','sedang'],
+ ['Pak Nurhasan, ketua RT','15.30 WIB','Sungai Gotong Royong','menipis'],
+ ['Bu Rahma, warga Kampung Bintang','20.45 WIB','Kampung Bintang','menipis'],
  ['Gabungan saksi warga','Menjelang senja','Alun-Alun Pahlawan','berwujud topeng']];
  function renderReport(){
   const i=playerState.currentCaseIndex,c=CASES_DATA[i],r=RPT[i];if(!r)return;
@@ -2785,7 +2785,7 @@ header{position:relative;z-index:45}
   el.innerHTML='<div class="rpt-h"><b>LAPORAN SAKSI MATA</b><span>No. RBT-'+String(c.id).padStart(3,'0')+'</span></div>'+
    '<div class="rpt-m"><div class="w"><small>Nama saksi</small>'+r[0]+'</div><div><small>Waktu</small>'+r[1]+'</div><div><small>Lokasi</small>'+r[2]+'</div><div><small>Subjek laporan</small>'+subj+'</div><div><small>Kabut Si Malas</small>'+r[3]+'</div></div>'+
    '<div class="rpt-s">KETERANGAN SAKSI (BAHASA INGGRIS)</div><ol>'+ss.map(s=>'<li>'+s.trim()+'</li>').join('')+'</ol>'+
-   '<div class="rpt-f"><span>Diterima oleh: <b>Detektif '+(AVN[playerState.avatar]||'Raka')+'</b></span><span class="rpt-sig">'+r[0].split(',')[0]+'</span></div><span class="rpt-st">DITERIMA</span>';
+   '<div class="rpt-f"><span>Diterima oleh: <b>Detektif '+(AVN[playerState.avatar]||'Beni')+'</b></span><span class="rpt-sig">'+r[0].split(',')[0]+'</span></div><span class="rpt-st">DITERIMA</span>';
  }
  const _f=fixClue;fixClue=function(){_f();renderReport()};
  /* ===== jam Ayu: konsekuensi bila waktu habis ===== */
@@ -3165,17 +3165,17 @@ try{
    'an':['Lihat huruf pertama kata <i>encyclopedia</i> dan ucapkan pelan-pelan: bunyi awalnya vokal atau konsonan?','Salah satu pilihan bukan kata sandang. Sisanya dibedakan oleh bunyi awal kata sesudahnya.','Contoh: <i>a book</i> (bunyi konsonan), <i>an apple</i> (bunyi vokal). Bandingkan dengan bunyi awal <i>encyclopedia</i>.'],
    'is holding':['Perhatikan kata <i>right now</i> (sekarang ini): perbuatan sedang berlangsung.','Pola perbuatan yang sedang berlangsung: kata bantu (is/am/are) + kata kerja-<i>ing</i>.','Dua pilihan tidak lengkap polanya: satu tanpa kata bantu, satu kata kerjanya tanpa -ing.'],
    'turns':['Subjeknya Intan, satu orang, dan kalimat ini tidak memakai <i>is</i> atau <i>are</i>.','Untuk kebiasaan dengan satu orang (he, she, nama), kata kerja mendapat -s.','Bentuk -ing tidak bisa berdiri sendiri tanpa <i>is</i>. Dari dua pilihan sisa, mana yang memakai -s?']}[key]||['Baca soal pelan-pelan dan cek kosakata.'];
-   box.innerHTML='<p class="font-black text-amber-950">Petunjuk Kaka Robi (Ronde '+(i+1)+'):</p><p>Soal: <b lang="en">'+h(q)+'</b></p><div class="wclue">'+HT[Math.min(m,3)-1]+'</div><p style="margin-top:6px">Tenang, coba lagi. Kamu pasti bisa menemukan jawabannya sendiri! Buka tombol Kosakata kalau perlu.</p>';
-   const im2=$('modalWrong').querySelector('img');if(im2){im2.src='assets/images/kaka_robi_explain.webp';im2.alt='Kaka Robi memberi petunjuk'}
+   box.innerHTML='<p class="font-black text-amber-950">Petunjuk Detektif (Ronde '+(i+1)+'):</p><p>Soal: <b lang="en">'+h(q)+'</b></p><div class="wclue">'+HT[Math.min(m,3)-1]+'</div><p style="margin-top:6px">Tenang, coba lagi. Kamu pasti bisa menemukan jawabannya sendiri! Buka tombol Kosakata kalau perlu.</p>';
+   const im2=$('modalWrong').querySelector('img');if(im2){im2.src='assets/images/kaka_robi_explain.webp';im2.alt='Detektif memberi petunjuk'}
    return}
   const n=tries[c.id]=(tries[c.id]||0)+1,K=keys(c).sort((a,b)=>b[0].length-a[0].length);
   let txt=h(c.clue||'');
   if(K.length)txt=txt.replace(new RegExp('('+K.map(x=>esc(h(x[0]))).join('|')+')','gi'),'<mark>$1</mark>');
   const FH=['Periksa satu ciri dulu: bentuk rambut Ayu (<i>wavy</i>). Pakai tombol Periksa untuk memperbesar gambar tiap tersangka.','Sekarang periksa benda yang dibawa: ransel apa yang dibawa Ayu, dan lencana apa yang ada di ransel itu? Lihat juga sepatunya.','Cek postur dan dadanya: Ayu <i>stands tall with confidence</i> dan memakai <i>batik pin</i>. Tersangka mana yang tidak cocok dengan ketiga ciri tadi?'],
    msg=(c.boss&&bs.i===7)?FH[Math.min(n,3)-1]:(n===1?'Hampir! Baca lagi laporan saksi. Frasa yang <b>tersorot</b> adalah ciri kuncinya.':n===2?'Cocokkan tiap frasa tersorot dengan pilihanmu. Buka artinya di bawah.':(c.errorAnalysis||'Coba lagi!'));
-  box.innerHTML='<p class="font-black text-amber-950">Kata Kaka Robi:</p><p>'+msg+'</p><div class="wclue" lang="en">'+txt+'</div>'+
+  box.innerHTML='<p class="font-black text-amber-950">Catatan Detektif:</p><p>'+msg+'</p><div class="wclue" lang="en">'+txt+'</div>'+
    (K.length?'<details '+(n>=2?'open':'')+'><summary>Arti frasa kunci</summary>'+K.map(x=>'<div class="wtr"><b lang="en">'+h(x[0])+'</b><span>'+h(x[1])+'</span></div>').join('')+'</details>':'');
-  const im=$('modalWrong').querySelector('img');if(im){im.src='assets/images/kaka_robi_explain.webp';im.alt='Kaka Robi menjelaskan'}
+  const im=$('modalWrong').querySelector('img');if(im){im.src='assets/images/kaka_robi_explain.webp';im.alt='Detektif menjelaskan'}
  };
 }catch(e){console.warn('v36 feedback',e)}
 
@@ -3557,8 +3557,10 @@ body{display:block!important;position:fixed;inset:0;min-height:0!important;overf
  /* 1. Briefing: tokoh terkena kabut + ikon kebiasaan */
  safe('briefing',()=>{const _b=showLevelBriefing;
   showLevelBriefing=function(i){_b(i);safe('briefing2',()=>{
-   const c=CASES_DATA[i],n=nm(c),img=document.querySelector('#screenLevelBriefing .anim-mascot img');
-   if(img&&n){img.src=IM+'char_'+n+'_fogged.webp';img.alt='Tokoh terkena kabut';img.className='h-56 w-auto object-contain drop-shadow-2xl'}
+   const c=CASES_DATA[i],n=nm(c),img=document.querySelector('#screenLevelBriefing .anim-mascot img:not(.v60det)');
+   if(img&&n){img.src=IM+(c.boss?'boss_kabut_malas_idle':'char_'+n+'_fogged')+'.webp';img.alt=c.boss?'Kabut Si Malas':'Tokoh terkena kabut';img.className='h-56 w-auto object-contain drop-shadow-2xl'}
+   if(img){const box=img.parentElement;let d=box.querySelector('.v60det');if(!d){d=document.createElement('img');d.className='v60det';box.insertBefore(d,img)}
+    d.alt='Detektif';d.src=IM+'detective_'+(playerState.avatar||'boy1')+'_'+(c.boss?'thinking':'idle')+'.webp'}
    const hb=$('briefingHabit');if(hb&&HAB[c.id]){hb.querySelectorAll('.v55hi').forEach(e=>e.remove());hb.insertAdjacentHTML('afterbegin','<img class="v55hi" alt="" style="width:20px!important;height:20px!important;max-width:20px!important;object-fit:contain;display:inline-block;vertical-align:-5px;margin-right:4px" src="'+IM+'icon_habit_'+HAB[c.id]+'.webp">')}
   })}});
 
@@ -3569,6 +3571,9 @@ body{display:block!important;position:fixed;inset:0;min-height:0!important;overf
    _s(ok);
    if(!ok)return;
    safe('menang2',()=>{const n=nm(c),w=document.querySelector('#modalWin img[alt="Win"]');
+    if(w){let row=w.closest('.v60row');if(!row){row=document.createElement('div');row.className='v60row';w.parentNode.insertBefore(row,w);row.appendChild(w)}
+     let d=row.querySelector('.v60det');if(!d){d=document.createElement('img');d.className='v60det';row.insertBefore(d,w)}
+     d.alt='Detektif';d.src=IM+'detective_'+(playerState.avatar||'boy1')+'_victory.webp'}
     if(w&&n){w.src=IM+'char_'+n+'_restored.webp';w.removeAttribute('class');w.style.cssText='height:140px;width:auto;max-width:100%;object-fit:contain;display:block;margin:0 auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))'}
     if(boss&&be)fx('fx_fog_burst_sheet',be,.9,2)})}});
  safe('bintang',()=>{const el=$('v8Stars');if(!el)return;let busy=false;
@@ -3847,5 +3852,13 @@ body{display:block!important;position:fixed;inset:0;min-height:0!important;overf
 })();
 </script>
 
+<style id="v60-css">
+#screenLevelBriefing .anim-mascot{width:auto!important;display:flex;align-items:flex-end;gap:2px;flex-shrink:0}
+#screenLevelBriefing>div.max-w-4xl{max-width:1180px!important}
+#screenLevelBriefing .anim-mascot img{width:auto!important;max-width:none!important;height:13rem!important;object-fit:contain;object-position:bottom}
+#screenLevelBriefing .anim-mascot img.v60det{height:13rem!important}
+.v60row{display:flex;align-items:flex-end;justify-content:center;gap:10px;width:100%}
+.v60row img.v60det{height:140px;width:auto;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}
+</style>
 </body>
 </html>
